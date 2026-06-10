@@ -7,7 +7,7 @@
 
 use acu_core::{
     CognitiveEvent, Decision, EventStore, InMemoryEventStore, MindState, Percept, ReflexSubstrate,
-    Substrate, step,
+    Substrate, SubstrateError, step,
 };
 
 fn percept(utterance: &str) -> Percept {
@@ -44,12 +44,14 @@ fn replay_counts_every_percept_and_keeps_the_last_decision() {
     assert_eq!(state.last_decision, Some(decision("oui")));
 }
 
-#[test]
-fn step_records_the_percept_then_the_decision_it_returns() {
+#[tokio::test]
+async fn step_records_the_percept_then_the_decision_it_returns() {
     let mut store = InMemoryEventStore::new();
     let substrate = ReflexSubstrate;
 
-    let made = step(&mut store, &substrate, percept("bonjour"));
+    let made = step(&mut store, &substrate, percept("bonjour"))
+        .await
+        .unwrap();
 
     let history = store.load();
     assert_eq!(history.len(), 2);
@@ -60,14 +62,16 @@ fn step_records_the_percept_then_the_decision_it_returns() {
     assert_eq!(history[1], CognitiveEvent::DecisionMade(made));
 }
 
-#[test]
-fn replayed_state_matches_what_was_lived_with_the_reflex_substrate() {
+#[tokio::test]
+async fn replayed_state_matches_what_was_lived_with_the_reflex_substrate() {
     let mut store = InMemoryEventStore::new();
     let substrate = ReflexSubstrate;
 
-    step(&mut store, &substrate, percept("un"));
-    step(&mut store, &substrate, percept("deux"));
-    let last = step(&mut store, &substrate, percept("trois"));
+    step(&mut store, &substrate, percept("un")).await.unwrap();
+    step(&mut store, &substrate, percept("deux")).await.unwrap();
+    let last = step(&mut store, &substrate, percept("trois"))
+        .await
+        .unwrap();
 
     let state = MindState::replay(&store.load());
 
@@ -80,19 +84,25 @@ fn replayed_state_matches_what_was_lived_with_the_reflex_substrate() {
 struct EchoSubstrate;
 
 impl Substrate for EchoSubstrate {
-    fn decide(&self, _state: &MindState, percept: &Percept) -> Decision {
-        Decision {
+    async fn decide(
+        &self,
+        _state: &MindState,
+        percept: &Percept,
+    ) -> Result<Decision, SubstrateError> {
+        Ok(Decision {
             response: percept.utterance.clone(),
-        }
+        })
     }
 }
 
-#[test]
-fn the_substrate_is_swappable_and_replay_still_holds() {
+#[tokio::test]
+async fn the_substrate_is_swappable_and_replay_still_holds() {
     let mut store = InMemoryEventStore::new();
     let substrate = EchoSubstrate;
 
-    let last = step(&mut store, &substrate, percept("miroir"));
+    let last = step(&mut store, &substrate, percept("miroir"))
+        .await
+        .unwrap();
 
     let state = MindState::replay(&store.load());
 

@@ -15,3 +15,6 @@ categories.workspace = true
 workspace = true
 
 [dependencies]
+
+[dev-dependencies]
+tokio = { version = "1", features = ["macros", "rt"] }

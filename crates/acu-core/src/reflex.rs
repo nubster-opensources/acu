@@ -1,6 +1,7 @@
 //! A trivial deterministic substrate, used for tests and early development.
 
 use crate::decision::Decision;
+use crate::error::SubstrateError;
 use crate::mind::MindState;
 use crate::percept::Percept;
 use crate::substrate::Substrate;
@@ -13,9 +14,13 @@ use crate::substrate::Substrate;
 pub struct ReflexSubstrate;
 
 impl Substrate for ReflexSubstrate {
-    fn decide(&self, _state: &MindState, percept: &Percept) -> Decision {
-        Decision {
+    async fn decide(
+        &self,
+        _state: &MindState,
+        percept: &Percept,
+    ) -> Result<Decision, SubstrateError> {
+        Ok(Decision {
             response: format!("ack: {}", percept.utterance),
-        }
+        })
     }
 }

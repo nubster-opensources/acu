@@ -6,6 +6,7 @@
 
 pub mod cycle;
 pub mod decision;
+pub mod error;
 pub mod event;
 pub mod mind;
 pub mod percept;
@@ -15,6 +16,7 @@ pub mod substrate;
 
 pub use cycle::step;
 pub use decision::Decision;
+pub use error::SubstrateError;
 pub use event::CognitiveEvent;
 pub use mind::MindState;
 pub use percept::Percept;
