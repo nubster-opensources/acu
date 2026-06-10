@@ -1,0 +1,32 @@
+[workspace]
+resolver = "2"
+members = [
+    "crates/acu-core",
+]
+
+[workspace.package]
+version = "0.0.1"
+edition = "2024"
+rust-version = "1.88"
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/nubster-opensources/acu"
+homepage = "https://github.com/nubster-opensources/acu"
+authors = ["Nubster"]
+keywords = ["cognitive-agent", "event-sourcing", "hexagonal", "ai", "rust"]
+categories = ["science", "simulation"]
+
+[workspace.lints.rust]
+unsafe_code = "deny"
+missing_docs = "warn"
+
+[workspace.lints.clippy]
+all = { level = "deny", priority = -1 }
+pedantic = { level = "deny", priority = -1 }
+module_name_repetitions = "allow"
+missing_errors_doc = "allow"
+missing_panics_doc = "allow"
+
+[profile.release]
+lto = "thin"
+codegen-units = 1
+strip = "symbols"

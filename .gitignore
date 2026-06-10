@@ -1,0 +1,41 @@
+# Rust
+/target/
+**/target/
+Cargo.lock
+*.rs.bk
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Local data
+/data/
+/logs/
+*.log
+*.mnemo
+*.redb
+*.db
+
+# Environment
+.env
+.env.local
+*.local
+
+# Build artifacts
+*.pdb
+*.exe
+*.dll
+
+# Coverage
+/coverage/
+*.profraw
+*.profdata
+tarpaulin-report.html
+
+# Temporary
+.tmp/
+.cache/
