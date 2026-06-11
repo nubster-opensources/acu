@@ -56,3 +56,35 @@ async fn mistral_model_reports_a_request_error_on_a_server_failure() {
 
     assert!(result.is_err());
 }
+
+#[tokio::test]
+async fn mistral_model_includes_status_and_body_in_error_on_non_2xx() {
+    let server = MockServer::start().await;
+
+    Mock::given(method("POST"))
+        .and(path("/v1/chat/completions"))
+        .respond_with(
+            ResponseTemplate::new(422)
+                .set_body_json(serde_json::json!({"message": "Invalid model"})),
+        )
+        .mount(&server)
+        .await;
+
+    let model = MistralModel::new("test-key", "bad-model", server.uri());
+    let prompt = Prompt {
+        system: "sys".to_string(),
+        user: "salut".to_string(),
+    };
+
+    let err = model.complete(&prompt).await.unwrap_err();
+    let msg = err.to_string();
+
+    assert!(
+        msg.contains("422"),
+        "error message should contain the HTTP status code; got: {msg}"
+    );
+    assert!(
+        msg.contains("Invalid model"),
+        "error message should contain the response body; got: {msg}"
+    );
+}

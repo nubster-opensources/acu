@@ -1,5 +1,7 @@
 //! The default provider: a thin adapter over the Mistral chat completions API.
 
+use core::time::Duration;
+
 use serde::{Deserialize, Serialize};
 
 use crate::error::LlmError;
@@ -23,6 +25,9 @@ impl MistralModel {
     pub const DEFAULT_MODEL: &str = "mistral-small-latest";
     /// The default API base URL.
     pub const DEFAULT_BASE_URL: &str = "https://api.mistral.ai";
+    /// Default HTTP client timeout applied to every request. Prevents a stalled
+    /// provider from blocking the caller indefinitely.
+    pub const DEFAULT_TIMEOUT: Duration = Duration::from_secs(30);
 
     /// Wraps an explicit configuration. Mainly used to point the provider at a mock endpoint in
     /// tests; production code should prefer [`MistralModel::from_env`].
@@ -32,7 +37,10 @@ impl MistralModel {
         base_url: impl Into<String>,
     ) -> MistralModel {
         MistralModel {
-            client: reqwest::Client::new(),
+            client: reqwest::Client::builder()
+                .timeout(Self::DEFAULT_TIMEOUT)
+                .build()
+                .unwrap_or_default(),
             api_key: api_key.into(),
             model: model.into(),
             base_url: base_url.into(),
@@ -84,9 +92,12 @@ impl LanguageModel for MistralModel {
             .json(&request)
             .send()
             .await
-            .map_err(|error| LlmError::Request(error.to_string()))?
-            .error_for_status()
             .map_err(|error| LlmError::Request(error.to_string()))?;
+        let status = response.status();
+        if !status.is_success() {
+            let body = response.text().await.unwrap_or_default();
+            return Err(LlmError::Request(format!("{status}: {body}")));
+        }
         let completion: ChatResponse = response
             .json()
             .await
