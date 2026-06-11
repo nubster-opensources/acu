@@ -1,0 +1,26 @@
+[package]
+name = "acu-substrate-llm"
+description = "Language-model substrate for the Autonomous Cognitive Unit, with a swappable provider port (Mistral by default)."
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+authors.workspace = true
+keywords.workspace = true
+categories.workspace = true
+
+[lints]
+workspace = true
+
+[dependencies]
+acu-core = { version = "0.0.1", path = "../acu-core" }
+reqwest = { version = "0.12", default-features = false, features = ["json", "rustls-tls"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+thiserror = "2"
+
+[dev-dependencies]
+tokio = { version = "1", features = ["macros", "rt", "rt-multi-thread"] }
+wiremock = "0.6"

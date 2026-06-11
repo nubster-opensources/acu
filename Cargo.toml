@@ -2,6 +2,7 @@
 resolver = "2"
 members = [
     "crates/acu-core",
+    "crates/acu-substrate-llm",
 ]
 
 [workspace.package]
