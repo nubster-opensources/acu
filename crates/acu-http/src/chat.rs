@@ -5,6 +5,7 @@ use std::convert::Infallible;
 use acu_core::{Decision, EventStore, Percept, Substrate, SubstrateError, step};
 use axum::Json;
 use axum::extract::State;
+use axum::http::StatusCode;
 use axum::response::sse::{Event, Sse};
 use futures_core::Stream;
 use serde::Deserialize;
@@ -27,11 +28,15 @@ pub struct ChatRequest {
 pub(crate) async fn chat<S, E>(
     State(state): State<AcuState<S, E>>,
     Json(request): Json<ChatRequest>,
-) -> Sse<impl Stream<Item = Result<Event, Infallible>>>
+) -> Result<Sse<impl Stream<Item = Result<Event, Infallible>>>, (StatusCode, &'static str)>
 where
     S: Substrate + Send + Sync + 'static,
     E: EventStore + Send + 'static,
 {
+    if request.utterance.trim().is_empty() {
+        return Err((StatusCode::BAD_REQUEST, "utterance must not be blank"));
+    }
+
     let substrate = state.substrate();
     let store = state.store();
     let percept = Percept {
@@ -54,7 +59,7 @@ where
         yield Ok(stage("done"));
     };
 
-    Sse::new(events)
+    Ok(Sse::new(events))
 }
 
 /// A bare lifecycle event carrying only its name (`thinking`, `done`).

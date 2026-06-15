@@ -114,3 +114,20 @@ async fn the_cycle_records_the_percept_then_the_decision() {
     assert!(matches!(recorded[0], CognitiveEvent::PerceptReceived(_)));
     assert!(matches!(recorded[1], CognitiveEvent::DecisionMade(_)));
 }
+
+#[tokio::test]
+async fn chat_rejects_a_blank_utterance() {
+    let state = AcuState::new(ReflexSubstrate, InMemoryEventStore::new());
+    let response = router(state).oneshot(post_chat("   ")).await.unwrap();
+
+    assert_eq!(response.status(), StatusCode::BAD_REQUEST);
+}
+
+#[tokio::test]
+async fn chat_rejects_an_oversized_body() {
+    let state = AcuState::new(ReflexSubstrate, InMemoryEventStore::new());
+    let oversized = "a".repeat(100 * 1024);
+    let response = router(state).oneshot(post_chat(&oversized)).await.unwrap();
+
+    assert_eq!(response.status(), StatusCode::PAYLOAD_TOO_LARGE);
+}

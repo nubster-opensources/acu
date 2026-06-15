@@ -14,7 +14,14 @@ pub use state::AcuState;
 
 use acu_core::{EventStore, Substrate};
 use axum::Router;
+use axum::extract::DefaultBodyLimit;
 use axum::routing::post;
+
+/// The largest request body the chat route accepts, in bytes.
+///
+/// A chat message is small, so anything larger is rejected before deserialization, bounding the
+/// memory a single request can claim.
+const MAX_BODY_BYTES: usize = 64 * 1024;
 
 /// Builds the cognitive chat router.
 ///
@@ -28,5 +35,6 @@ where
 {
     Router::new()
         .route("/chat", post(chat::chat::<S, E>))
+        .layer(DefaultBodyLimit::max(MAX_BODY_BYTES))
         .with_state(state)
 }
