@@ -1,0 +1,29 @@
+[package]
+name = "acu-http"
+description = "Reusable Axum router that drives the Autonomous Cognitive Unit and streams each cognitive cycle as Server-Sent Events."
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+authors.workspace = true
+keywords.workspace = true
+categories.workspace = true
+
+[lints]
+workspace = true
+
+[dependencies]
+acu-core = { version = "0.0.1", path = "../acu-core" }
+axum = "0.8"
+tokio = { version = "1", features = ["sync"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+futures-core = "0.3"
+async-stream = "0.3"
+
+[dev-dependencies]
+tokio = { version = "1", features = ["macros", "rt-multi-thread"] }
+tower = { version = "0.5", features = ["util"] }
+http-body-util = "0.1"

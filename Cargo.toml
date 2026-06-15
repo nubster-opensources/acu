@@ -3,6 +3,7 @@ resolver = "2"
 members = [
     "crates/acu-core",
     "crates/acu-substrate-llm",
+    "crates/acu-http",
 ]
 
 [workspace.package]
