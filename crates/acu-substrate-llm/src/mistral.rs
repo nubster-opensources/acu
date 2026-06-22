@@ -40,10 +40,7 @@ impl MistralModel {
             client: reqwest::Client::builder()
                 .timeout(Self::DEFAULT_TIMEOUT)
                 .build()
-                // The only failure path is a missing TLS backend, which is
-                // bundled as a static dependency (rustls). This cannot fail at
-                // runtime unless the binary was built without TLS support.
-                .expect("reqwest Client construction is infallible with bundled TLS"),
+                .unwrap_or_default(),
             api_key: api_key.into(),
             model: model.into(),
             base_url: base_url.into(),
