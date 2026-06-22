@@ -54,6 +54,12 @@ jobs:
       - name: Publish acu-core
         run: bash scripts/cargo-publish-idempotent.sh acu-core ${{ steps.mode.outputs.args }} --token "${{ secrets.CARGO_REGISTRY_TOKEN }}"
 
+      - name: Publish acu-substrate-llm
+        run: bash scripts/cargo-publish-idempotent.sh acu-substrate-llm ${{ steps.mode.outputs.args }} --token "${{ secrets.CARGO_REGISTRY_TOKEN }}"
+
+      - name: Publish acu-http
+        run: bash scripts/cargo-publish-idempotent.sh acu-http ${{ steps.mode.outputs.args }} --token "${{ secrets.CARGO_REGISTRY_TOKEN }}"
+
   github-release:
     name: Create GitHub Release
     runs-on: ubuntu-latest
