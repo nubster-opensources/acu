@@ -10,7 +10,7 @@ use crate::prompt::Prompt;
 
 /// A [`LanguageModel`] backed by the Mistral chat completions API.
 ///
-/// Sovereign by default: a direct HTTPS call to Mistral, no third-party SDK. The API key is read
+/// A direct HTTPS call to Mistral, no third-party SDK. The API key is read
 /// from the `MISTRAL_API_KEY` environment variable.
 #[derive(Debug)]
 pub struct MistralModel {
