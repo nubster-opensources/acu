@@ -10,7 +10,7 @@ use crate::prompt::Prompt;
 
 /// A [`LanguageModel`] backed by the Mistral chat completions API.
 ///
-/// Sovereign by default: a direct HTTPS call to Mistral, no third-party SDK. The API key is read
+/// A direct HTTPS call to Mistral, no third-party SDK. The API key is read
 /// from the `MISTRAL_API_KEY` environment variable.
 #[derive(Debug)]
 pub struct MistralModel {
@@ -40,7 +40,10 @@ impl MistralModel {
             client: reqwest::Client::builder()
                 .timeout(Self::DEFAULT_TIMEOUT)
                 .build()
-                .unwrap_or_default(),
+                // The only failure path is a missing TLS backend, which is
+                // bundled as a static dependency (rustls). This cannot fail at
+                // runtime unless the binary was built without TLS support.
+                .expect("reqwest Client construction is infallible with bundled TLS"),
             api_key: api_key.into(),
             model: model.into(),
             base_url: base_url.into(),
