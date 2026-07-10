@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- _Items in flight will be listed here until the next release._
+
 ## [0.0.1] - 2026-06-10
 
 ### Added
