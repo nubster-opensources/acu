@@ -13,9 +13,9 @@ rust-version = "1.88"
 description = "Event-sourced cognitive agent framework in Rust: hexagonal core, swappable reasoning substrate, append-only memory."
 license = "MIT OR Apache-2.0"
 repository = "https://github.com/nubster-opensources/acu"
-homepage = "https://github.com/nubster-opensources/acu"
+homepage = "https://nubster.com"
 authors = ["Nubster"]
-keywords = ["cognitive-agent", "event-sourcing", "hexagonal", "agent", "rust"]
+keywords = ["cognitive-agent", "event-sourcing", "hexagonal", "agent"]
 categories = ["science", "simulation"]
 
 [workspace.lints.rust]
