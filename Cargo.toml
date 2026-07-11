@@ -15,7 +15,7 @@ license = "MIT OR Apache-2.0"
 repository = "https://github.com/nubster-opensources/acu"
 homepage = "https://github.com/nubster-opensources/acu"
 authors = ["Nubster"]
-keywords = ["cognitive-agent", "event-sourcing", "hexagonal", "agent", "rust"]
+keywords = ["cognitive-agent", "event-sourcing", "hexagonal", "agent"]
 categories = ["science", "simulation"]
 
 [workspace.lints.rust]
