@@ -19,8 +19,8 @@ acu is sponsored by [Nubster](https://nubster.com).
 **Pre-alpha.** The core domain model is stable; the HTTP and LLM crates are experimental.
 Breaking changes may occur on any `0.x` minor bump. See [SEMVER policy](./docs/SEMVER_POLICY.md).
 
-No external contributions are accepted yet. The project is public so design work happens
-transparently. Contribution guidelines will apply once the project reaches `v0.1.0`.
+No external contributions are accepted yet. Contribution guidelines will apply once the
+project reaches `v0.1.0`.
 
 ## Quick start
 
