@@ -1,0 +1,13 @@
+{
+  "name": "acu dev container",
+  "image": "mcr.microsoft.com/devcontainers/rust:1-1.88-bookworm",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "rust-lang.rust-analyzer",
+        "tamasfe.even-better-toml"
+      ]
+    }
+  },
+  "postCreateCommand": "rustup component add clippy rustfmt"
+}
