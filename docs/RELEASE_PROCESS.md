@@ -1,4 +1,4 @@
-# Release policy
+# Release process
 
 acu uses a semi-automated release pipeline driven by
 [cargo-release](https://github.com/crate-ci/cargo-release) for version
@@ -6,17 +6,18 @@ bumping and a GitHub Actions workflow for publishing.
 
 ## Release process
 
-1. **Prepare the release branch.**
-   From `main`, create a `release/vX.Y.Z` branch and run:
+1. **Run the release script.**
+   Either trigger the `Bump` workflow manually (Actions tab, `level` input:
+   `patch` / `minor` / `major` / explicit `x.y.z`), or run
+   `scripts/release.sh <patch|minor|major|x.y.z>` locally from `main`.
 
-   ```
-   cargo release --execute minor   # or patch / major
-   ```
-
-   cargo-release bumps all workspace crate versions to the same number,
-   graduates the `[Unreleased]` section in CHANGELOG.md to `[X.Y.Z] - DATE`,
-   and opens a commit on the release branch. It does NOT publish, tag, or push
-   (see `release.toml`).
+   The script creates the `release/vX.Y.Z-prep` branch, graduates the
+   `[Unreleased]` section in CHANGELOG.md to `[X.Y.Z] - DATE`, then runs
+   cargo-release to bump every workspace crate version in a single commit
+   (path-deps included). It does NOT publish, tag, or push a tag
+   (see `release.toml`). It then runs `cargo fmt --check`, `cargo clippy`
+   and `cargo test`, pushes the branch and opens the release prep pull
+   request.
 
 2. **Review and merge the bump PR.**
    Open a pull request from `release/vX.Y.Z` to `main`. The CI must be green.
